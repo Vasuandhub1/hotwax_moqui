@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+<service verb="create" noun="MoquiTraining"  type="entity-auto" authenticate="false">
+<in-parameters>
+<auto-parameters entity-name="MoquiTraining" required="true"></auto-parameters>
+</in-parameters>
+<out-parameters>
+<parameter name="trainingId"></parameter>
+</out-parameters>
+</service>
+
+<!-- fetching data -->
+
+<service verb="fetch" noun="MoquiTraining">
+        <description>Fetch MoquiTraining records based on optional filters</description>
+
+        <!-- Input Parameters -->
+        <in-parameters>
+        
+            <parameter name="trainingName"  required="false">
+                <description>Filter by training name</description>
+            </parameter>
+            <parameter name="trainingId"  required="false">
+                <description>Filter by training ID</description>
+            </parameter>
+        </in-parameters>
+
+        <!-- Output Parameters -->
+        <out-parameters>
+            <parameter name="trainingList" type="List" required="true">
+                <description>List of training records</description>
+            </parameter>
+        </out-parameters>
+
+        <!-- Actions -->
+        <actions>
+        
+            <entity-find entity-name="moqui.training.MoquiTraining" list="trainingList">
+                <econdition field-name="trainingName" ignore-if-empty="true"/>
+                <econdition field-name="trainingId" ignore-if-empty="true"/>
+                <select-field field-name="trainingId"/>
+                <select-field field-name="trainingName"/>
+                <select-field field-name="trainingDate"/>
+                <select-field field-name="trainingDuration"/>
+                <select-field field-name="trainingPrice"/>
+                <select-field field-name="lastUpdatedStamp"/>
+            </entity-find>
+        </actions>
+    </service>
+    <!-- now create the service to update the document -->
+ <service verb="store" type="inline" noun="MoquiTraining">
+    <in-parameters>
+        <auto-parameters include="all" />
+    </in-parameters>
+    <out-parameters>
+        <auto-parameters include="pk" required="true" />
+    </out-parameters>
+    <actions>
+        <entity-find-one entity-name="MoquiTraining" value-field="filterdata">
+            <field-map field-name="trainingId" from="context.trainingId" />
+        </entity-find-one>
+        <if condition="filterdata == null">
+            <entity-make-value entity-name="MoquiTraining" value-field="moquiTraining" />
+            <entity-set value-field="moquiTraining" include="all" />
+            <entity-create value-field="moquiTraining" />
+        </if>     
+        <if condition="filterdata != null">
+            <entity-set value-field="filterdata" include="all" />
+            <entity-update value-field="filterdata" />
+        </if>
+    </actions>
+</service>
+
+<!-- creating the servioce to get teh data -->
+<service verb="get" noun="MoquiTraining" authenticate="anonymous-all">
+<out-parameters>
+<parameter name="trainingList"></parameter>
+</out-parameters>
+<actions>
+<entity-find entity-name="MoquiTraining" list="trainingList"></entity-find>
+</actions>
+</service>
+
+
+</services>

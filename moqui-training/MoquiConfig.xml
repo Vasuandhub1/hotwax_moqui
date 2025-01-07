@@ -1,0 +1,8 @@
+<screens xmlns="http://moqui.org/xsd/screen-2.1">
+    <screen name="MyScreen" default-menu-title="My Screen">
+        <!-- Screen content -->
+        <widgets>
+            <text>This is My Screen!</text>
+        </widgets>
+    </screen>
+</screens>
