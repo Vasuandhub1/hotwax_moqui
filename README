@@ -1,1 +1,4 @@
-Put your add-on component directories in this directory to load them when Moqui runs.
+Hotwax Moqui REST api screenshots
+Create a Party: POST /parties
+
+          
