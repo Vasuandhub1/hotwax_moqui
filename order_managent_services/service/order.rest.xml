@@ -1,0 +1,28 @@
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-3.xsd"
+          name="order" displayName=" Order Management System API" require-authentication="anonymous-all" version="1.0.0" description="Services for Customer">
+          <!-- Create an Order: POST /orders -->
+          <method type="post">
+          <service name="OMSservices.partyTrainingService.create#Order" />
+          </method>
+          <!-- Retrieve Order Details: GET /orders/{order_id} -->
+          <id name="order_id">
+          <method type="get">
+          <service name="OMSservices.partyTrainingService.get#Order" />
+          </method>
+          <method type="put">
+          <service name="OMSservices.partyTrainingService.update#Order" />
+          </method>
+          <!-- Delete an Order: DELETE /orders/{order_id} -->
+          <method type="delete">
+          <service name="OMSservices.partyTrainingService.delete#Order" />
+          </method>
+          <!-- OMSservices.partyTrainingService.delete#Order -->
+          <resource name="items">
+          <method type="post">
+          <service name="OMSservices.partyTrainingService.add#Order" />
+          </method>
+          </resource>
+          
+
+          </id>
+          </resource>

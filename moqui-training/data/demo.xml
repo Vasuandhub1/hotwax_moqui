@@ -1,0 +1,4 @@
+<entity-facade-xml>
+<MoquiTraining trainingDate="2002-02-02" trainingName="java moqui" trainingDuration="10" trainingPrice="1000" trainingId="1" ></MoquiTraining>
+<MoquiTraining trainingDate="2002-02-02" trainingName="pythoin" trainingDuration="10" trainingPrice="1000" trainingId="2" ></MoquiTraining>
+</entity-facade-xml>

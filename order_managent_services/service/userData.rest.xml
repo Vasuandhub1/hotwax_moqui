@@ -1,0 +1,46 @@
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-3.xsd"
+          name="parties" displayName=" Order Management System API" version="1.0.0" description="Services for Customer">
+       
+       <resource name="Parties" require-authentication="anonymous-all">
+       <!-- Create a Party: POST /parties -->
+       <method type="post" require-authentication="anonymous-all">
+       <service name="OMSservices.partyTrainingService.create#Party"  />
+       </method>
+       
+       <!-- Retrieve Party Details: GET /parties/{party_id} -->
+       <id name="party_id">
+       <method type="get" require-authentication="anonymous-all">
+       <service name="OMSservices.partyTrainingService.get#Party"/>
+       </method>
+        <!-- Update a Party: PUT /parties/{party_id} -->
+       <method type="put" require-authentication="anonymous-all">
+       <service name="OMSservices.partyTrainingService.update#Party" />
+       </method>
+       <!-- Delete a Party: DELETE /parties/{party_id} -->
+       <method type="delete" require-authentication="anonymous-all">
+       <service name="OMSservices.partyTrainingService.delete#Party" />
+       </method>
+       <resource name="contacts">
+       <method type="post">
+       <service name="OMSservices.partyTrainingService.create#ContactMech" />
+       </method>
+       <method type="get">
+       <service name="OMSservices.partyTrainingService.get#ContactMech" />
+       </method>
+       <!-- Update Contact Mechanism: PUT /parties/{party_id}/contacts/{contact_mech_id} -->
+       <id name="contact_id">
+       <method type="put">
+       <service name="OMSservices.partyTrainingService.update#ContactMech" />
+       </method>
+       <!-- Delete Contact Mechanism: DELETE /parties/{party_id}/contacts/{contact_mech_id} -->
+       <method type="delete">
+       <service name="OMSservices.partyTrainingService.delete#ContactMech" />
+       </method>
+       </id>
+       </resource>
+       </id>
+      
+       
+
+</resource>
+       </resource>

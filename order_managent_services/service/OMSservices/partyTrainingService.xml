@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
+
+<!--  service to create the party -->
+<service verb="create" noun="Party">
+<in-parameters>
+<auto-parameters entity-name="Party" include="nonpk"></auto-parameters>
+</in-parameters>
+<out-parameters>
+<auto-parameters include="all"></auto-parameters>
+</out-parameters>
+<actions>
+<entity-make-value entity-name="Party" value-field="data" />
+<entity-set value-field="data" include="all" />
+<if condition="data.partyId == null">
+<entity-sequenced-id-primary value-field="data" />
+</if>
+<entity-create value-field="data" />
+</actions>
+</service>
+<!-- service to get the part sing the id -->
+
+<service verb="get" noun="Party">
+<in-parameters>
+<auto-parameters entity-name="Party" include="nonpk"></auto-parameters>
+<parameter name="party_id"></parameter>
+</in-parameters>
+<out-parameters>
+<parameter name="partyList"></parameter>
+</out-parameters>
+<actions>
+<entity-find entity-name="Party" list="partyList">
+ <econdition field-name="partyId" from="party_id" ignore-if-empty="true" />
+ <select-field field-name="partyId" />
+ <select-field field-name="partyType" />
+ <select-field field-name="firstName" />
+ <select-field field-name="lastName" />
+</entity-find>
+</actions>
+</service>
+
+<!-- now create service to update the  -->
+
+<service verb="update" noun="Party">
+<in-parameters>
+<auto-parameters  include="nonpk"></auto-parameters>
+<parameter name="party_id"></parameter>
+</in-parameters>
+<out-parameters>
+<auto-parameters include="all"></auto-parameters>
+</out-parameters>
+
+<actions>
+<entity-find-one entity-name="Party" value-field="data">
+<field-map field-name="partyId" from="context.party_id" />
+
+</entity-find-one>
+
+<if condition="data != null">
+<entity-set value-field="data" include="all" />
+<entity-update value-field="data" />
+</if>
+<if condition="data==null">
+<entity-make-value entity-name="Party" value-field="data" />
+<entity-set value-field="data" include="all" />
+<entity-create value-field="data" />
+</if>
+
+
+</actions>
+</service>
+
+<!--  now creating the service to delete the party  using id-->
+
+<service verb="delete" noun="Party">
+<in-parameters>
+
+<parameter name="party_id" />
+</in-parameters>
+
+<out-parameters>
+<parameter name="partyId" />
+</out-parameters>
+
+<actions>
+
+<entity-find-one entity-name="Party" value-field="filterdata">
+<field-map field-name="partyId" from="context.party_id"/>
+</entity-find-one>                                                                                     
+<entity-find-one entity-name="OrderHeader" value-field="filterforid">
+<field-map field-name="partyId" from="context.party_id" />
+</entity-find-one>
+<if condition="filterforid != null">
+
+<entity-delete-related value-field="filterforid" relationship-name="OrderItem" />
+
+</if>
+
+<if condition="filterdata!=null">
+<entity-delete-related value-field="filterdata" relationship-name="OrderHeader" />
+<entity-delete-related value-field="filterdata" relationship-name="ContactMech" />
+<entity-delete value-field="filterdata"/>
+</if>
+
+
+</actions>
+
+
+</service>
+
+<!-- now creating the services for the  Contact Mechanisms -->
+<service verb="create" noun="ContactMech">
+<in-parameters>
+<parameter name="party_id" required="true"></parameter>
+<parameter name="streetAddress" required="true"></parameter>
+<parameter name="city" required="true"></parameter>
+<parameter name="state" required="true"></parameter>
+<parameter name="postalCode" required="true"></parameter>
+</in-parameters>
+<out-parameters>
+    
+<parameter name="party_id" />
+</out-parameters>
+<actions>
+<entity-make-value entity-name="moqui.party.ContactMech" value-field="data" />
+<if condition="data.contactMechId == null">
+<entity-sequenced-id-primary value-field="data" />
+</if>
+<set field="data.partyId" from="context.party_id" />
+<set field="data.state" from="context.state" />
+<set field="data.city" from="context.city" />
+<set field="data.streetAddress" from="context.streetAddress" />
+<set field="data.postalCode" from="context.postalCode" />
+<entity-create value-field="data" />
+</actions>
+</service>
+
+<!-- now creatring get to retrive the data from the table  -->
+<service verb="get" noun="ContactMech">
+<in-parameters>
+<parameter name="party_id" required="true"></parameter>
+</in-parameters>
+<out-parameters>
+<parameter name="datalist"></parameter>
+</out-parameters>
+<actions>
+<entity-find entity-name="ContactMech" list="datalist">
+<econdition field-name="partyId"  from="context.party_id" />
+</entity-find>
+</actions>
+</service>
+
+<!-- now  creating the service to update the contact mech  -->
+<service verb="update" noun="ContactMech">
+<in-parameters>
+<parameter name="party_id" required="true"></parameter>
+<parameter name="contact_id" required="true"></parameter>
+<parameter name="streetAddress" required="true"></parameter>
+<parameter name="city" required="true"></parameter>
+<parameter name="state" required="true"></parameter>
+<parameter name="postalCode" required="true"></parameter>
+</in-parameters>
+<out-parameters>
+</out-parameters>
+<actions>
+<entity-find-one entity-name="ContactMech" value-field="data">
+<field-map field-name="partyId" from="context.party_id" />
+<field-map field-name="contactMechId" from="context.contact_id" />
+</entity-find-one>
+<if condition="data!=null">
+<entity-set value-field="data"  include="all"/>
+<entity-update value-field="data" />
+</if>
+<if condition='data==null' >
+<entity-make-value entity-name="ContactMech" value-field="data" />
+<if condition="ContactMechId==NULL">
+<entity-sequenced-id-primary value-field="data" />
+</if>
+<entity-set value-field="data"  include="all"/>
+<entity-create value-field="data" />
+</if>
+</actions>
+</service>
+
+<!-- now creating service to delete ContactMech  -->
+<service verb="delete" noun="ContactMech">
+    <in-parameters>
+        <parameter name="party_id" required="true" />
+        <parameter name="contact_id" required="true" />
+    </in-parameters>
+   <actions>
+            <entity-find-one entity-name="ContactMech" value-field="datalist">
+                <field-map field-name="partyId" from="context.party_id" />
+                <field-map field-name="contactMechId" from="context.contact_id" />
+            </entity-find-one>
+            <if condition="datalist!=null">
+            <entity-find-related value-field="datalist" relationship-name="OrderHeader" list="relationlist" />
+            <if condition="!relationlist">
+            <entity-delete value-field="datalist" />              
+            </if>
+            <else>
+            <message> the uer is present in the relation can not be deleted</message>
+            </else>
+            </if>
+            <else>
+            <message>user not found in the data base</message>
+            </else>
+
+        </actions>
+</service>
+
+
+<!-- product  -->
+<!-- product  -->
+<!-- product  -->
+
+<service verb="create" noun="Product">
+<in-parameters>
+<auto-parameters  include="nonpk" />
+</in-parameters>
+
+<out-parameters>
+<auto-parameters include="all"/>
+</out-parameters>
+
+<actions>
+
+<entity-make-value entity-name="moqui.party.Product" value-field="data" />
+<entity-set value-field="data" include="all"  />
+<if condition="data.productId==null">
+<entity-sequenced-id-primary value-field="data" />
+</if>
+<entity-create value-field="data" />
+</actions>
+</service>
+
+
+
+
+<!--  service to get product id -->
+<service verb="get" noun="Product">
+<in-parameters>
+<parameter name="product_id"></parameter>
+</in-parameters>
+<out-parameters>
+<parameter name="datalist"></parameter>
+</out-parameters>
+<actions>
+<entity-find entity-name="Product" list="datalist">
+<econdition field-name="productId" from="context.product_id" />
+</entity-find>
+</actions>
+</service>
+
+<!-- service to update the product -->
+<service verb="update" noun="Product">
+<in-parameters>
+<parameter name="product_id"></parameter>
+<auto-parameters include="nonpk"></auto-parameters>
+</in-parameters>
+<actions>
+<entity-find-one entity-name="Product" value-field="productdata">
+<field-map field-name="productId" from="context.product_id" />
+</entity-find-one>
+<if condition="context.productName!=''">
+<set field="productdata.productName" from="context.productName"></set>
+</if>
+<if condition="context.color!=''">
+<set field="productdata.color" from="context.color"></set>
+</if>
+<if condition="context.size!=''">
+<set field="productdata.size" from="context.size"></set>
+</if>
+<entity-update value-field="productdata" />
+</actions>
+</service>
+
+<!-- deletet product using product id  -->
+<service verb="delete" noun="Product">
+<in-parameters>
+<parameter name="product_id"></parameter>
+</in-parameters>
+<out-parameters></out-parameters>
+<actions>
+<entity-find-one entity-name="Product" value-field="data">
+<field-map field-name="productId" from="context.product_id"/>
+</entity-find-one>
+
+<if condition="data!=null">
+<entity-delete-related value-field="data" relationship-name="OrderItem" />
+<entity-delete value-field="data"/>
+</if>
+</actions>
+</service>
+
+<!-- now creating rest for order Data -->
+<service verb="create" noun="Order">
+<in-parameters>
+<parameter name="orderDate" required="true" type="Date"></parameter>
+<parameter name="quantity" required="true"></parameter>
+<parameter name="status" required="true"></parameter>
+<parameter name="party_id" required="true"></parameter>
+<parameter name="shipping_mech_id" required="true"></parameter>
+<parameter name="billing_mech_id" required="true"></parameter>
+<parameter name="product_id" required="true"></parameter>
+</in-parameters>
+<out-parameters>
+<parameter name="orderdata"></parameter>
+<parameter name="itemdata"></parameter>
+</out-parameters>
+<actions>
+<entity-make-value entity-name="OrderHeader" value-field="orderdata" />
+<set field="orderdata.shippingContactMechId" from="context.shipping_mech_id"/>
+<set field="orderdata.billingContactMechId" from="context.billing_mech_id"/>
+<set field="orderdata.partyId" from="context.party_id"/>
+<set field="orderdata.orderDate" from="context.orderDate"/>
+<entity-sequenced-id-primary value-field="orderdata" />
+<entity-create value-field="orderdata" />
+<!-- now crete order item  -->
+<entity-make-value entity-name="OrderItem" value-field="itemdata" />
+<set field="itemdata.orderId" from="orderdata.orderId" />
+<set field="itemdata.productId" from="context.product_id" />
+<set field="itemdata.quantity" from="context.quantity" />
+<set field="itemdata.status" from="context.status"/>
+<entity-sequenced-id-primary value-field="itemdata" />
+<entity-create value-field="itemdata"/>
+</actions>
+</service>
+
+<!-- now get the data from there -->
+<service verb="get" noun="Order">
+<in-parameters>
+<parameter name="order_id"></parameter>
+</in-parameters>
+<out-parameters>
+<parameter name="headerdata"></parameter>
+<parameter name="orderdetails"></parameter>
+</out-parameters>
+<actions>
+<entity-find-one entity-name="OrderHeader" value-field="headerdata">
+<field-map field-name="orderId" from="context.order_id" />
+</entity-find-one>
+<entity-find-related value-field="headerdata" relationship-name="OrderItem" list="orderdetails" />
+</actions>
+</service>
+
+<!-- now update the order -->
+
+<service verb="update" noun="Order">
+    <description>Update an order and its related order item</description>
+
+    <!-- Input Parameters -->
+    <in-parameters>
+        <parameter name="orderDate" type="Date"></parameter>
+        <parameter name="quantity"></parameter>
+        <parameter name="status"></parameter>
+        <parameter name="party_id"></parameter>
+        <parameter name="shipping_mech_id"></parameter>
+        <parameter name="billing_mech_id"></parameter>
+        <parameter name="product_id"></parameter>
+        <parameter name="order_id" required="true"></parameter>
+    </in-parameters>
+
+    <!-- Output Parameters -->
+    <out-parameters>
+        <parameter name="orderdata"></parameter>
+        <parameter name="itemdata"></parameter>
+    </out-parameters>
+
+    
+    <actions>
+       
+        <entity-find-one entity-name="OrderHeader" value-field="orderdata">
+            <field-map field-name="orderId" from="order_id" />
+        </entity-find-one>
+
+        <if condition=" context.shipping_mech_id != ''" >
+            <set field="orderdata.shippingContactMechId" from="context.shipping_mech_id" />
+        </if>
+        <if condition=" context.billing_mech_id != ''">
+            <set field="orderdata.billingContactMechId" from="context.billing_mech_id" />
+        </if>
+        <if condition="context.orderDate != ''">
+            <set field="orderdata.orderDate" from="context.orderDate" />
+        </if>
+
+        <entity-update value-field="orderdata" />
+        <entity-find-one entity-name="OrderItem" value-field="itemdata">
+            <field-map field-name="orderId" from="order_id" />
+            <field-map field-name="productId" from="context.product_id" />
+        </entity-find-one>
+
+        <if condition="context.quantity != ''">
+            <set field="itemdata.quantity" from="context.quantity" />
+        </if>
+        <if condition="context.status != ''">
+            <set field="itemdata.status" from="context.status" />
+        </if>
+        <entity-update value-field="itemdata" />
+    </actions>
+</service>
+
+<!-- now delete the data from the order -->
+
+<service verb="delete" noun="Order">
+<in-parameters>
+<parameter name="order_id" required="true"></parameter>
+</in-parameters>
+<out-parameters>
+</out-parameters>
+<actions>
+<entity-find-one entity-name="OrderHeader" value-field="headerdata">
+<field-map field-name="orderId" from="context.order_id" />
+</entity-find-one>
+<entity-delete-related value-field="headerdata" relationship-name="OrderItem"/>
+<entity-delete value-field="headerdata" />
+</actions>
+</service>
+
+<!-- add items to the order item -->
+<service verb="add" noun="Order">
+<in-parameters>
+<parameter name="order_id" required="true"></parameter>
+<parameter name="product_id" required="true"></parameter>
+<parameter name="quantity" required="true"></parameter>
+<parameter name="status" required="true"></parameter>
+</in-parameters>
+<out-parameters>
+<parameter name="itemdata"></parameter>
+</out-parameters>
+<actions>
+<entity-make-value entity-name="OrderItem" value-field="itemdata"/>
+<set field="itemdata.orderId" from="context.order_id" />
+<set field="itemdata.productId" from="context.product_id" />
+<set field="itemdata.quantity" from="context.quantity" />
+<set field="itemdata.status" from="context.status" />
+<entity-sequenced-id-primary value-field="itemdata" />
+<entity-create value-field="itemdata" />
+</actions>
+</service>
+
+
+</services>

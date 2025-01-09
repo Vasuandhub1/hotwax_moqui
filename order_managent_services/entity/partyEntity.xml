@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/entity-definition-2.1.xsd">
+        <!-- now create Party  -->
+        <entity entity-name="Party" package="moqui.party">
+        <field name="partyId" type="id" is-pk="true" />
+        <field name="partyType" type="text-medium" not-null="true"/>
+        <field name="firstName" type="text-medium" />
+        <field name="lastName" type="text-medium" />
+        </entity>
+        <!-- now create the table for contact mech -->
+        <entity entity-name="ContactMech" package="moqui.party">
+        <field name="contactMechId" type="id" is-pk="true"></field>
+        <field name="partyId" type="id" ></field>
+        <field name="streetAddress" type="text-medium" not-null="true"></field>
+        <field name="city" type="text-medium"></field>
+        <field name="state" type="text-medium"></field>
+        <field name="postalCode" type="text-medium"></field>
+        <relationship type="one" related="Party">
+        <key-map field-name="partyId"  related="partyId"/>
+        </relationship>
+        </entity>
+        <!-- now create product  -->
+        <entity entity-name="Product" package="moqui.party">
+        <field name="productId" type="id" is-pk="true"></field>
+        <field name="productName" type="text-medium" not-null="true"></field>
+        <field name="color" type="text-medium" ></field>
+        <field name="size" type="text-medium" ></field>
+        </entity>
+        <!-- now create the table order=header -->
+        <entity entity-name="OrderHeader" package="moqui.party">
+        <field name="orderId" is-pk="true"  type="id"></field>
+        <field name="orderDate"  type="date" not-null="true"></field>
+        <field name="partyId"  type="id"></field>
+        <field name="shippingContactMechId"  type="id" ></field>
+        <field name="billingContactMechId"  type="id" ></field>
+        <relationship type="one" related="ContactMech">
+        <key-map field-name="shippingContactMechId" related="contactMechId" />
+        </relationship>
+        <relationship type="one" related="Party">
+        <key-map field-name="partyId" related="partyId" />
+        </relationship>
+        <relationship type="one" related="ContactMech">
+        <key-map field-name="billingContactMechId" related="contactMechId" />
+        </relationship>
+        </entity>
+        <!-- now createing order item entity -->
+        <entity entity-name="OrderItem" package="moqui.party">
+        <field name="orderItemSeqId" type="id" is-pk="true"></field>
+        <field name="orderId" type="id"></field>
+        <field name="productId" type="id"></field>
+        <field name="quantity" type="number-integer" not-null="true"></field>
+        <field name="status" type="text-medium" ></field>
+        <relationship type="one" related="OrderHeader">
+        <key-map field-name="orderId" related="orderId" />
+        </relationship>
+        <relationship type="one" related="Product">
+        <key-map field-name="productId" related="productId" />
+        </relationship>
+        </entity>
+
+</entities>

@@ -1,0 +1,65 @@
+[
+    {
+      "_dataType": "demo"
+    },
+    {
+      "_entity": "Party",
+      "partyId": "1",
+      "partyType": "Customer",
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    {
+      "_entity": "Party",
+      "partyId": "2",
+      "partyType": "Customer",
+      "firstName": "Jane",
+      "lastName": "Smith"
+    },
+    {
+      "_entity": "ContactMech",
+      "contactMechId": "1",
+      "partyId": "1",
+      "streetAddress": "1600 Amphitheatre Parkway",
+      "city": "Mountain View",
+      "state": "CA",
+      "postalCode": "94043"
+    },
+    {
+      "_entity": "ContactMech",
+      "contactMechId": "2",
+      "partyId": "2",
+      "streetAddress": "350 Fifth Avenue",
+      "city": "New York",
+      "state": "NY",
+      "postalCode": "10118"
+    },
+    {
+      "_entity": "Product",
+      "productId": "1",
+      "productName": "T-Shirt",
+      "color": "Red",
+      "size": "M"
+    },
+    {
+      "_entity": "Product",
+      "productId": "2",
+      "productName": "Jeans",
+      "color": "Blue",
+      "size": "32"
+    },
+    {
+      "_entity": "Product",
+      "productId": "3",
+      "productName": "Jacket",
+      "color": "White",
+      "size": "L"
+    },
+    {
+      "_entity": "Product",
+      "productId": "4",
+      "productName": "Sneakers",
+      "color": "Black",
+      "size": "9"
+    }
+  ]
