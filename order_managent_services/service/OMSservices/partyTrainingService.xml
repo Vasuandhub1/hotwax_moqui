@@ -199,12 +199,10 @@
             <entity-delete value-field="datalist" />              
             </if>
             <else>
-            <message> the uer is present in the relation can not be deleted</message>
+            <message> the user is not found in data base </message>
             </else>
             </if>
-            <else>
-            <message>user not found in the data base</message>
-            </else>
+            
 
         </actions>
 </service>
