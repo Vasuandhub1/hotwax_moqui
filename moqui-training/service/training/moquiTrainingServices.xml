@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-3.xsd">
-<service verb="create" noun="MoquiTraining"  type="entity-auto" authenticate="false">
-<in-parameters>
-<auto-parameters entity-name="MoquiTraining" required="true"></auto-parameters>
-</in-parameters>
-<out-parameters>
-<parameter name="trainingId"></parameter>
-</out-parameters>
-</service>
+<service verb="create" noun="MoquiTraining" type="inline">
+        <in-parameters>
+            <auto-parameters include="all" />
+        </in-parameters>
+        <out-parameters>
+            <auto-parameters include="pk" required="true" />
+        </out-parameters>
+        <actions>
+            <script>
+            <![CDATA[             
+            import static org.moqui.util.ObjectUtilities.*
+            import static org.moqui.util.CollectionUtilities.*
+            import static org.moqui.util.StringUtilities.*  
+            import java.sql.Timestamp
+            import java.sql.Time
+            import java.time.*
+            // these are in the context by default: ExecutionContext ec, Map<String, Object> context, Map<String, Object> result
+                moquiTraining = ec.entity.makeValue("MoquiTraining")
+                moquiTraining.setFields(context, false, null, null)
+                moquiTraining.create()
+            // make sure the last statement is not considered the return value
+            return;
+            ]]> 
+            </script>
+        </actions>
+    </service>
 
 <!-- fetching data -->
 
